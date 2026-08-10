@@ -54,6 +54,14 @@ try {
     throw new Error(`The packaged native binary is missing at ${nativeAddon}`);
   }
 
+  const packageDirectory = join(consumerDirectory, "node_modules", "macos-native-clone-file");
+  if (existsSync(join(packageDirectory, "src"))) {
+    throw new Error("The packaged source directory should not be included in releases");
+  }
+  if (readdirSync(join(packageDirectory, "dist")).some((file) => file.endsWith(".map"))) {
+    throw new Error("The packaged distribution should not include source maps");
+  }
+
   runConsumer(`
     import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
     import { tmpdir } from 'node:os'

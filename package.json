@@ -1,7 +1,7 @@
 {
   "name": "macos-native-clone-file",
   "version": "1.0.0",
-  "description": "A macOS clonefile(2) wrapper",
+  "description": "macOS copy-on-write support for Node.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/biw/macos-native-clone-file.git"

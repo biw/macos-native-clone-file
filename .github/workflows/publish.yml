@@ -117,15 +117,15 @@ jobs:
 
       - name: Assemble target directories
         env:
+          MODULE_NAME: macos_native_clone_file
           OUTPUT_DIRECTORY: dist
           TARGETS: darwin-x64 darwin-arm64
         run: |
           for target in $TARGETS; do
             source=".swift-node-prebuild-artifacts/swift-node-prebuild-$target"
-            destination="$OUTPUT_DIRECTORY/$target"
-            test -d "$source"
-            mkdir -p "$destination"
-            cp -R "$source/." "$destination/"
+            binary="$source/$MODULE_NAME.$target.node"
+            test -f "$binary"
+            cp "$binary" "$OUTPUT_DIRECTORY/"
           done
 
       - name: Verify prebuild set
@@ -138,7 +138,7 @@ jobs:
           test -f "dist/index.d.mts"
           test -f "dist/index.d.cts"
           for target in $TARGETS; do
-            test -f "dist/$target/$MODULE_NAME.$target.node"
+            test -f "dist/$MODULE_NAME.$target.node"
           done
 
       - name: Pack release package

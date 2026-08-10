@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -41,6 +41,18 @@ try {
   );
 
   run("npm", ["install", "--ignore-scripts", "--omit=dev", packageTarball], consumerDirectory);
+
+  const target = `${process.platform}-${process.arch}`;
+  const nativeAddon = join(
+    consumerDirectory,
+    "node_modules",
+    "macos-native-clone-file",
+    "dist",
+    `macos_native_clone_file.${target}.node`,
+  );
+  if (!existsSync(nativeAddon)) {
+    throw new Error(`The packaged native binary is missing at ${nativeAddon}`);
+  }
 
   runConsumer(`
     import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'

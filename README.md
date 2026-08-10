@@ -4,7 +4,7 @@
 [![npm version](https://badgen.net/npm/v/macos-native-clone-file)](https://www.npmjs.com/package/macos-native-clone-file)
 [![npm downloads](https://badgen.net/npm/dt/macos-native-clone-file)](https://www.npmjs.com/package/macos-native-clone-file)
 
-`cloneFile` creates a copy-on-write clone on a compatible macOS volume. It does not overwrite an existing destination and throws the operating-system error when cloning fails. It is small macOS wrapper around [`clonefile(2)`](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/clonefile.2.html).
+`cloneFile` creates a copy-on-write clone on a compatible macOS volume. It does not overwrite an existing destination and throws the operating-system error when cloning fails. It is a small macOS wrapper around [`clonefile(2)`](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/clonefile.2.html).
 
 ## Install
 

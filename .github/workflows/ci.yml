@@ -64,10 +64,6 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - uses: SwiftyLab/setup-swift@38f54a76b70d989321de9dc7c840618c08cf56e9 # v1.14.0
-        with:
-          swift-version: 6.3.3
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

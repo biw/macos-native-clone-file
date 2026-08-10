@@ -1,6 +1,6 @@
 {
   "name": "macos-native-clone-file",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "macOS copy-on-write support for Node.js",
   "repository": {
     "type": "git",
@@ -37,8 +37,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "build": "pnpm build:native && tsdown",
-    "build:native": "swift-node build",
+    "build": "tsdown",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "lint": "oxlint --deny-warnings .",
@@ -50,7 +49,8 @@
     "@types/node": "^24.0.0",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.77.0",
-    "swift-node": "^0.0.4",
+    "swift-node": "^0.1.0",
+    "swift-node-unplugin": "0.1.0",
     "tsdown": "^0.22.14",
     "typescript": "^6.0.2",
     "vitest": "^2.1.9"

@@ -178,7 +178,7 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: npm publish release/*.tgz
+        run: npm publish ./release/*.tgz
 
   release:
     needs: [check-version, publish]

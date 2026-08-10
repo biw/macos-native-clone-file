@@ -1,0 +1,5 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - swift-node@0.0.4
+  - swift-node-unplugin@0.0.4

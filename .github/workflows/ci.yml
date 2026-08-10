@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_call:
+    inputs:
+      upload_release_artifacts:
+        description: Upload the macOS prebuilds and runtime files for a release workflow.
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint and format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check formatting
+        run: pnpm format:check
+
+  test:
+    name: Test native package (${{ matrix.label }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: macOS Intel
+            runner: macos-15-intel
+            target: darwin-x64
+            runtime_files: true
+          - label: macOS ARM64
+            runner: macos-15
+            target: darwin-arm64
+            runtime_files: false
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - uses: SwiftyLab/setup-swift@38f54a76b70d989321de9dc7c840618c08cf56e9 # v1.14.0
+        with:
+          swift-version: 6.3.3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm test
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test packaged install
+        run: pnpm test:packaged
+
+      - name: Check package contents
+        run: pnpm pack --dry-run
+
+      - name: Upload prebuild
+        if: inputs.upload_release_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-node-prebuild-${{ matrix.target }}
+          path: dist/${{ matrix.target }}/**
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload generated runtime files
+        if: inputs.upload_release_artifacts && matrix.runtime_files
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-node-runtime-files
+          path: |
+            dist/**
+            !dist/**/*.node
+            !dist/**/*.so*
+            !dist/**/*.dll
+          if-no-files-found: error
+          retention-days: 7
+
+  test-summary:
+    name: Test native package
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify both macOS test jobs passed
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+        run: test "$TEST_RESULT" = success

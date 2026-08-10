@@ -1,6 +1,6 @@
 {
   "name": "macos-native-clone-file",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "macOS copy-on-write support for Node.js",
   "repository": {
     "type": "git",
